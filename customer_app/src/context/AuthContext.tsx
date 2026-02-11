@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { dummyUsers, User } from '../data/users';
+import { Address, dummyUsers, User } from '../data/users';
 
 interface AuthContextType {
   user: User | null;
   login: (phoneNumber: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,8 +47,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const updateUser = (updates: Partial<User>) => {
+    setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+
+      const mergedAddresses: Address[] | undefined =
+        updates.addresses ?? prevUser.addresses;
+
+      return {
+        ...prevUser,
+        ...updates,
+        address: {
+          ...prevUser.address,
+          ...(updates.address ?? {}),
+        },
+        addresses: mergedAddresses,
+      };
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

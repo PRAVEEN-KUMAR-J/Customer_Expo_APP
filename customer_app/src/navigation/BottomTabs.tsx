@@ -5,13 +5,10 @@ import { HomeScreen } from '../screens/home/HomeScreen';
 import { ShopListScreen } from '../screens/shop/ShopListScreen';
 import { CartScreen } from '../screens/cart/CartScreen';
 import { OrderHistoryScreen } from '../screens/order/OrderHistoryScreen';
+import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { useCart } from '../context/CartContext';
 
 const Tab = createBottomTabNavigator();
-
-const ProfileScreen = () => (
-  <HomeScreen />
-);
 
 export const BottomTabs: React.FC = () => {
   const { getTotalItems } = useCart();
