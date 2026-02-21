@@ -32,6 +32,13 @@ export const ShopCard: React.FC<ShopCardProps> = ({ shop, onPress }) => {
             <Text style={styles.deliveryTime}>{shop.deliveryTime}</Text>
           </View>
         </View>
+
+        <View style={styles.addressRow}>
+          <MapPin size={14} color="#6B7280" />
+          <Text style={styles.addressText} numberOfLines={1}>
+            {shop.address}
+          </Text>
+        </View>
         
         <View style={styles.categoriesContainer}>
           {shop.categories.slice(0, 3).map((category, index) => (
@@ -54,10 +61,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.14,
+    shadowRadius: 6,
+    elevation: 4,
   },
   shopImage: {
     width: '100%',
@@ -93,7 +100,18 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 6,
+  },
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  addressText: {
+    marginLeft: 4,
+    fontSize: 12,
+    color: '#6B7280',
+    flex: 1,
   },
   ratingContainer: {
     flexDirection: 'row',

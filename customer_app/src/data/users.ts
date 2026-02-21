@@ -6,6 +6,7 @@ export interface User {
   address: {
     street: string;
     city: string;
+    district?: string;
     pincode: string;
     location: {
       latitude: number;

@@ -6,6 +6,7 @@ import { AuthProvider } from '@/src/context/AuthContext';
 import { CartProvider } from '@/src/context/CartContext';
 import { OrderProvider } from '@/src/context/OrderContext';
 import { AppNavigator } from '@/src/navigation/AppNavigator';
+import { FloatingWishlistButton } from '@/src/components/FloatingWishlistButton';
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -15,6 +16,7 @@ export default function RootLayout() {
       <CartProvider>
         <OrderProvider>
           <AppNavigator />
+          <FloatingWishlistButton />
           <StatusBar style="auto" />
         </OrderProvider>
       </CartProvider>

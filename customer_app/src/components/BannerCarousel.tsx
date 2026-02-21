@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, ScrollView, Image, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, ScrollView, Image, Text, StyleSheet, Dimensions, TouchableOpacity, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { dummyBanners } from '../data/banners';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -9,13 +9,42 @@ interface BannerCarouselProps {
 }
 
 export const BannerCarousel: React.FC<BannerCarouselProps> = ({ onBannerPress }) => {
+  const scrollRef = useRef<ScrollView | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!dummyBanners.length) return;
+
+    const id = setInterval(() => {
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % dummyBanners.length;
+        scrollRef.current?.scrollTo({
+          x: next * screenWidth,
+          y: 0,
+          animated: true,
+        });
+        return next;
+      });
+    }, 4000);
+
+    return () => clearInterval(id);
+  }, []);
+
+  const handleMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = e.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / screenWidth);
+    setCurrentIndex(index);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
+        ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         style={styles.scrollView}
+        onMomentumScrollEnd={handleMomentumEnd}
       >
         {dummyBanners.map((banner) => (
           <TouchableOpacity
