@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
 import { Product } from '../data/products';
 
 export interface CartItem {
@@ -14,12 +14,32 @@ interface CartContextType {
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  shouldShowCheckoutBar: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [shouldShowCheckoutBar, setShouldShowCheckoutBar] = useState(false);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Function to trigger showing checkout bar and reset timer
+  const triggerCheckoutBar = () => {
+    // Clear existing timer if any
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+    
+    // Show the bar
+    setShouldShowCheckoutBar(true);
+    
+    // Hide after 5 seconds
+    hideTimerRef.current = setTimeout(() => {
+      setShouldShowCheckoutBar(false);
+      hideTimerRef.current = null;
+    }, 5000);
+  };
 
   const addToCart = (product: Product, quantity: number = 1) => {
     setItems(prevItems => {
@@ -35,6 +55,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       return [...prevItems, { product, quantity }];
     });
+    
+    // Trigger checkout bar visibility when product is added
+    triggerCheckoutBar();
   };
 
   const removeFromCart = (productId: string) => {
@@ -58,7 +81,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setItems([]);
+    // Hide checkout bar when cart is cleared
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    setShouldShowCheckoutBar(false);
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
 
   const getTotalItems = () => {
     return items.reduce((total, item) => total + item.quantity, 0);
@@ -77,6 +115,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearCart,
       getTotalItems,
       getTotalPrice,
+      shouldShowCheckoutBar,
     }}>
       {children}
     </CartContext.Provider>

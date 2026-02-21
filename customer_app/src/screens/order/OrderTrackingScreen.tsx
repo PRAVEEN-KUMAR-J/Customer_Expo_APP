@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MapPin, Clock } from 'lucide-react-native';
+import { MapPin, Clock, ArrowLeft } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { OrderStatusStepper } from '../../components/OrderStatusStepper';
 import { useOrder } from '../../context/OrderContext';
 
@@ -9,12 +10,14 @@ interface OrderTrackingScreenProps {
   route: {
     params: {
       orderId: string;
+      fromPayment?: boolean;
     };
   };
 }
 
 export const OrderTrackingScreen: React.FC<OrderTrackingScreenProps> = ({ route }) => {
-  const { orderId } = route.params;
+  const navigation = useNavigation();
+  const { orderId, fromPayment } = route.params;
   const { getOrderById, startOrderTracking } = useOrder();
   const [order, setOrder] = useState(getOrderById(orderId));
 
@@ -31,6 +34,16 @@ export const OrderTrackingScreen: React.FC<OrderTrackingScreenProps> = ({ route 
       return () => clearInterval(interval);
     }
   }, [orderId, order?.status]);
+
+  // Auto-navigate to home only if coming from payment, after 3 seconds
+  useEffect(() => {
+    if (fromPayment) {
+      const timeout = setTimeout(() => {
+        navigation.navigate('Main' as never, { screen: 'Home' } as never);
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [fromPayment, navigation]);
 
   if (!order) {
     return (
@@ -59,6 +72,18 @@ export const OrderTrackingScreen: React.FC<OrderTrackingScreenProps> = ({ route 
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Custom header with back button */}
+      <View style={styles.navHeader}>
+        <TouchableOpacity
+          style={styles.navBackBtn}
+          onPress={() => navigation.navigate('Main' as never, { screen: 'Home' } as never)}
+        >
+          <ArrowLeft size={22} color="#111827" />
+        </TouchableOpacity>
+        <Text style={styles.navTitle}>Track Order</Text>
+        <View style={styles.navSpacer} />
+      </View>
+
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Order Header */}
         <View style={styles.header}>
@@ -155,9 +180,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
+  navHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  navBackBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  navSpacer: {
+    width: 36,
+  },
   content: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 20,
   },
   header: {
     backgroundColor: '#FFFFFF',

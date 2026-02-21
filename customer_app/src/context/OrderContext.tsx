@@ -3,10 +3,17 @@ import { Order, OrderStatus, dummyOrders } from '../data/orders';
 import { CartItem } from './CartContext';
 import { Shop } from '../data/shops';
 
+type DeliveryAddress = Order['deliveryAddress'];
+
 interface OrderContextType {
   orders: Order[];
   currentOrder: Order | null;
-  placeOrder: (items: CartItem[], shop: Shop, paymentMethod: 'cash' | 'razorpay') => Promise<string>;
+  placeOrder: (
+    items: CartItem[],
+    shop: Shop,
+    paymentMethod: 'cash' | 'razorpay',
+    deliveryAddress: DeliveryAddress,
+  ) => Promise<string>;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
   startOrderTracking: (orderId: string) => void;
   getOrderById: (orderId: string) => Order | undefined;
@@ -31,7 +38,12 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return { subtotal, deliveryFee, tax, total };
   };
 
-  const placeOrder = async (items: CartItem[], shop: Shop, paymentMethod: 'cash' | 'razorpay'): Promise<string> => {
+  const placeOrder = async (
+    items: CartItem[],
+    shop: Shop,
+    paymentMethod: 'cash' | 'razorpay',
+    deliveryAddress: DeliveryAddress,
+  ): Promise<string> => {
     // Simulate order processing delay
     await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -58,11 +70,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       status: 'confirmed',
       paymentMethod,
       orderDate: new Date(),
-      deliveryAddress: {
-        street: '123 Main Street, Apartment 4B',
-        city: 'Mumbai',
-        pincode: '400001',
-      },
+      deliveryAddress,
       deliveryTime: '30-45 minutes',
     };
 

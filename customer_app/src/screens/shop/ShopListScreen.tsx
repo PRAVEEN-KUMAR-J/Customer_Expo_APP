@@ -17,14 +17,15 @@ export const ShopListScreen: React.FC = () => {
     )
   );
 
-  const handleShopPress = (shopId: string) => {
-    navigation.navigate('ProductList' as never, { shopId } as never);
+  const handleShopPress = (shopId: string, shopName: string) => {
+    navigation.navigate('ShopCategories' as never, { shopId, shopName } as never);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>All Shops</Text>
+        <Text style={styles.headerSubtitle}>Pick your favourite market nearby</Text>
         <View style={styles.searchContainer}>
           <Search size={20} color="#6B7280" style={styles.searchIcon} />
           <TextInput
@@ -46,7 +47,7 @@ export const ShopListScreen: React.FC = () => {
             <ShopCard 
               key={shop.id} 
               shop={shop} 
-              onPress={() => handleShopPress(shop.id)}
+              onPress={() => handleShopPress(shop.id, shop.name)}
             />
           ))
         )}
@@ -70,7 +71,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: '#1F2937',
-    marginBottom: 16,
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginBottom: 14,
   },
   searchContainer: {
     flexDirection: 'row',
