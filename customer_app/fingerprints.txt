@@ -1,0 +1,15 @@
+﻿
+> 	 SHA1: 3D:8A:51:88:5E:AB:5
+F:38:C7:C4:7B:A6:F1:61:14:0C:
+CD:8D:9B:4D
+> 	 SHA256: EF:50:E8:CD:9B:C3
+:25:59:68:02:22:F1:8C:3C:8A:B
+1:33:D6:2B:95:46:31:0A:62:CC:
+76:4F:D1:98:20:26:FB
+> Signature algorithm name: 
+SHA256withRSA
+  Subject Public Key 
+Algorithm: 2048-bit RSA key
+  Version: 1
+
+

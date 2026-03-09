@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
+import 'react-native-url-polyfill/auto';
+import React from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
-import { AuthProvider } from '@/src/context/AuthContext';
-import { CartProvider } from '@/src/context/CartContext';
-import { OrderProvider } from '@/src/context/OrderContext';
-import { AppNavigator } from '@/src/navigation/AppNavigator';
-import { FloatingWishlistButton } from '@/src/components/FloatingWishlistButton';
+import { AuthProvider } from '@/context/AuthContext';
+import { CartProvider } from '@/context/CartContext';
+import { OrderProvider } from '@/context/OrderContext';
 
-export default function RootLayout() {
+export default function RootLayoutScreen() {
   useFrameworkReady();
 
   return (
     <AuthProvider>
       <CartProvider>
         <OrderProvider>
-          <AppNavigator />
-          <FloatingWishlistButton />
+          <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="checkout" />
+            <Stack.Screen name="tracking" />
+            <Stack.Screen name="profile" />
+          </Stack>
           <StatusBar style="auto" />
         </OrderProvider>
       </CartProvider>

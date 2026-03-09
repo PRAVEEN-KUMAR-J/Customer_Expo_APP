@@ -18,14 +18,26 @@
       "favicon": "./assets/images/favicon.png"
     },
     "android": {
-      "package": "com.nimbasket.customer",
-      "googleServicesFile": "./assets/security/google-services.json"
-
+      "package": "com.nimbasket.customer"
     },
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location"
+        }
+      ],
+      [
+        "react-native-maps",
+        {
+          "useGoogleMapsOnAndroid": true
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,0 +1,105 @@
+import React from 'react';
+import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useAuth } from '../context/AuthContext';
+import { rootNavigationRef } from './rootNavigationRef';
+import { LoginScreen } from '../screens/auth/LoginScreen';
+import { BottomTabs } from './BottomTabs';
+import { ProductListScreen } from '../screens/shop/ProductListScreen';
+import { CheckoutScreen } from '../screens/checkout/CheckoutScreen';
+import { PaymentScreen } from '../screens/checkout/PaymentScreen';
+import { OrderTrackingScreen } from '../screens/order/OrderTrackingScreen';
+import { ProfileDetailsScreen } from '../screens/profile/ProfileDetailsScreen';
+import { SavedAddressesScreen } from '../screens/profile/SavedAddressesScreen';
+import { HelpSupportScreen } from '../screens/profile/HelpSupportScreen';
+import { WishlistScreen } from '../screens/profile/WishlistScreen';
+import { AddressDetailsScreen } from '../screens/profile/AddressDetailsScreen';
+import { AddressMapScreen } from '../screens/profile/AddressMapScreen';
+import { CategoriesScreen } from '../screens/home/CategoriesScreen';
+import { CategoryProductsScreen } from '../screens/shop/CategoryProductsScreen';
+
+const Stack = createStackNavigator();
+
+export const AppNavigator: React.FC = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+
+  return (
+    <NavigationIndependentTree>
+      <NavigationContainer ref={rootNavigationRef}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!user ? (
+          <Stack.Screen name="Login" component={LoginScreen} />
+        ) : (
+          <>
+            <Stack.Screen name="Main" component={BottomTabs} />
+            <Stack.Screen 
+              name="ProfileDetails" 
+              component={ProfileDetailsScreen} 
+              options={{ headerShown: true, title: 'Profile' }}
+            />
+            <Stack.Screen 
+              name="SavedAddresses" 
+              component={SavedAddressesScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="HelpSupport" 
+              component={HelpSupportScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="Wishlist" 
+              component={WishlistScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="AddressDetails" 
+              component={AddressDetailsScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AddressMap"
+              component={AddressMapScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="ShopCategories" 
+              component={CategoriesScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="CategoryProducts" 
+              component={CategoryProductsScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="ProductList" 
+              component={ProductListScreen} 
+              options={{ headerShown: true, title: 'Products' }}
+            />
+            <Stack.Screen 
+              name="Payment" 
+              component={PaymentScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="Checkout" 
+              component={CheckoutScreen} 
+              options={{ headerShown: true, title: 'Checkout' }}
+            />
+            <Stack.Screen 
+              name="OrderTracking" 
+              component={OrderTrackingScreen} 
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+      </NavigationContainer>
+    </NavigationIndependentTree>
+  );
+};
