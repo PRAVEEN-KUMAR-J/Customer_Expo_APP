@@ -59,5 +59,14 @@
     "@babel/core": "^7.25.2",
     "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "react-native-maps",
+        "@react-navigation/bottom-tabs",
+        "@react-navigation/native"
+      ]
+    }
   }
 }

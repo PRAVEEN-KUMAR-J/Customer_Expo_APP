@@ -18,7 +18,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "android": {
-      "package": "com.nimbasket.customer"
+      "package": "com.nimbasket.customer",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "plugins": [
       "expo-router",
